@@ -13,13 +13,29 @@ from datetime import datetime
 now = datetime.now()
 now_out = now.strftime('%Y-%m-%dT%H:%M:%S-05:00')
 print now_out
+
+
+fname = raw_input("Enter file name: ")	
+if len(fname) < 1 : fname = "data_dump.csv"
+
+try:
+	reader = csv.reader(open(fname, 'r'), delimiter=',')
+except:
+	print ("File not found\n")
+	exit()	
 	
 print 'begin writing XML'
-reader = csv.reader(open('data_dump.csv', 'r'), delimiter=',')
-
 
 #open xml file
-f = open('data_dump.xml', 'w')
+try:
+	f = open('data_dump.xml', 'w')
+except:
+	print ("File not found\n")
+	exit()
+	
+
+
+
 #XML declaration
 f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
 #XML root element
