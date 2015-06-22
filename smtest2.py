@@ -38,9 +38,18 @@ f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
 #XML root element
 f.write('\t<records>\n')
 
+###############################
+## Provider Records
+###############################
 #write pre-defined provider section
 #write_providers(fh, si, ri, nm, da, du)
 write_providers(f,"SMTest2","SMTest2","SecurManage Test Provider", now_out, now_out)
+
+
+
+###############################
+## Entry/Exit Records
+###############################
 f.write('\t\t<clientRecords>\n')
 
 i = 0 
@@ -68,7 +77,7 @@ for row in reader:
 	if ( len(row[COL_DOB]) >= 8) :
 		dobDateList = re.findall('([0-9].+?) ',row[COL_DOB]) 
 		if ( len(dobDateList) > 0) : 
-			dob = formatdob(dobDateList[0])
+			dob = formatdt(dobDateList[0])
 			dobDQ = "full dob reported(hud)"
 			hasDOB = 1
 		else : 
@@ -143,9 +152,12 @@ for row in reader:
 	f.write('\t\t\t</Client>\n')
 	
 	# print ("End of Row")
-	
-	
+		
 f.write('\t\t</clientRecords>\n')
+
+###############################
+## Entry/Exit Records
+###############################
 f.write('\t</records>\n')
 f.close()
 print 'finished writing XML'

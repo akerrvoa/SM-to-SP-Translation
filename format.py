@@ -6,12 +6,12 @@ def dashssn(ssn_in):
 	return ssn_out
 	
 
-#parse and format dob  xsd:dateTime  [-]CCYY-MM-DDThh:mm:ss[Z|(+|-)hh:mm] 
+#parse and format dt  xsd:dateTime  [-]CCYY-MM-DDThh:mm:ss[Z|(+|-)hh:mm] 
 #The time zone may be specified as Z (UTC) or (+|-)hh:mm. Time zones that aren't specified are considered undetermined.	
-def formatdob(dob_in):
-	dob_in.lstrip()
-	dob_in.rstrip()
-	parts = dob_in.split('/')
+def formatdt(dt_in):
+	dt_in.lstrip()
+	dt_in.rstrip()
+	parts = dt_in.split('/')
 	#input is (m)m/(d)d/yyyy   output is yyyy-mm-ddThh:mm:ss-0H:00
 	if len(parts[0]) == 1 : 
 		mo_out = '0' + parts[0]
@@ -21,8 +21,8 @@ def formatdob(dob_in):
 		day_out = "0" + parts[1]
 	else :
 		day_out = parts[1]
-	dob_out = parts[2] + '-' + mo_out + '-' + day_out + "T00:00:00-05:00"
-	return dob_out
+	dt_out = parts[2] + '-' + mo_out + '-' + day_out + "T00:00:00-05:00"
+	return dt_out
 
 def formatgender(gender_in):
 	gender_out = gender_in
