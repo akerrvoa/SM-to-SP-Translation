@@ -51,7 +51,8 @@ for row in reader:
 
 	########   Format Client Data   ########
 	
-	cId = "Client_" + str(reader.line_num-1)
+	#cId = "Client_" + str(reader.line_num-1)
+	cId = "Client_" + str(row[COL_RID])
 	
 	#SSN
 	if ( (int(row[COL_SSN]) > 0) or (len(row[COL_SSN]) == 9) ):
