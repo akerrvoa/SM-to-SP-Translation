@@ -29,9 +29,21 @@ def formatgender(gender_in):
 	return gender_out
 	
 def formatrace(race_in):
-	race_out = race_in
+	if race_in == "African American" :
+		race_out = "Black or African American (HUD)"
+	elif race_in == "Caucasian" :
+		race_out = "White (HUD)"
+	# elif race_in == "Hispanic" or race_in == "Other" or race_in == "Unspecified"
+		# race_out = "Data not collected (HUD)"
+	else :
+		race_out = "Data not collected (HUD)"
 	return race_out
 
 def formatveteran(vet_in):
-	vet_out = vet_in
+	if vet_in == "Yes" :
+		vet_out = "Yes (HUD)"
+	elif vet_in == "No" :
+		vet_out = "No (HUD)"
+	else :
+		vet_out = "Data not collected (HUD)"
 	return vet_out

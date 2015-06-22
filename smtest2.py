@@ -1,20 +1,10 @@
 ##import libraries
 import csv
 import re
+from fmapv2 import *
 from format import *
 from elementout import *
 from datetime import datetime
-
-###############################################
-###############################################
-
-def write_providers(fh) : 
-	fh.write("\t\t<providerRecords>\n") 
-	fh.write("\t\t\t<Provider system_id='SM_Test_1' record_id='SM_Test_1' date_added='2012-05-07T11:38:22-05:00' date_updated='2012-05-07T11:38:22-05:00'>\n")
-	fh.write("\t\t\t\t<name>SecurManage Test Provider</name>\n")
-	fh.write("\t\t\t</Provider>\n") 
-	f.write("\t\t</providerRecords>\n")
-
 
 ###############################################
 ###############################################
@@ -26,7 +16,7 @@ print now_out
 
 
 fname = raw_input("Enter file name: ")	
-if len(fname) < 1 : fname = "data_dump.csv"
+if len(fname) < 1 : fname = "data_dump2.csv"
 
 try:
 	reader = csv.reader(open(fname, 'r'), delimiter=',')
@@ -38,7 +28,7 @@ print 'begin writing XML'
 
 #open xml file
 try:
-	f = open('smtest1.xml', 'w')
+	f = open('smtest2.xml', 'w')
 except:
 	print ("File not found\n")
 	exit()
@@ -49,22 +39,23 @@ f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
 f.write('\t<records>\n')
 
 #write pre-defined provider section
-write_providers(f)
+#write_providers(fh, si, ri, nm, da, du)
+write_providers(f,"SMTest2","SMTest2","SecurManage Test Provider", now_out, now_out)
 f.write('\t\t<clientRecords>\n')
 
 i = 0 
 for row in reader:
 	i = i+1   #get row number for log
 	
-	if (row[0] == "Name") : continue       #skip header
+	if (row[COL_RID] == "rid") : continue       #skip header
 
 	########   Format Client Data   ########
 	
 	cId = "Client_" + str(reader.line_num-1)
 	
 	#SSN
-	if ( (int(row[1]) > 0) or (len(row[1]) == 9) ):
-		ssnDashed = dashssn(row[1])
+	if ( (int(row[COL_SSN]) > 0) or (len(row[COL_SSN]) == 9) ):
+		ssnDashed = dashssn(row[COL_SSN])
 		ssnDQ = "Full SSN Reported (HUD)"
 	else:
 		ssnDQ = "Don't Know or Don't Have SSN (HUD)"
@@ -73,8 +64,8 @@ for row in reader:
 	#DOB	
 	hasDOB = 0
 	dob = ""
-	if ( len(row[2]) >= 8) :
-		dobDateList = re.findall('([0-9].+?) ',row[2]) 
+	if ( len(row[COL_DOB]) >= 8) :
+		dobDateList = re.findall('([0-9].+?) ',row[COL_DOB]) 
 		if ( len(dobDateList) > 0) : 
 			dob = formatdob(dobDateList[0])
 			dobDQ = "full dob reported(hud)"
@@ -88,32 +79,43 @@ for row in reader:
 		
 	#Gender
 	hasGender = 0
-	if (len(row[6]) > 0) :
-		gender = formatgender(row[6])
+	if (len(row[COL_GENDER]) > 0) :
+		gender = formatgender(row[COL_GENDER])
 		hasGender = 1
 		
 	
 	#Race
 	hasRace = 0
-	if (len(row[7]) > 0) :
-		race = formatrace(row[7])
+	if (len(row[COL_RACE]) > 0) :
+		race = formatrace(row[COL_RACE])
 		hasRace = 1
+	
+	#Ethnicity
+	hasEthnicity = 0
+	if hasRace :
+		if row[COL_RACE] == "Hispanic" :
+			ethnicity = "Hispanic/Latino (HUD)"
+			hasEthnicity = 1
+		
 		
 	#Veteran Status
 	hasVetStatus = 0
-	if (len(row[11]) > 0) :
-		veteranStatus = formatveteran(row[11])
+	if (len(row[COL_VETSTAT]) > 0) :
+		veteranStatus = formatveteran(row[COL_VETSTAT])
 		hasVetStatus = 1
 
 	########  Write the XML Child Elements   ########
 	f.write("\t\t\t<Client system_id='" + cId + "' record_id='" + cId + "' date_added='2012-05-07T11:38:22-05:00' date_updated='2012-05-07T11:38:22-05:00'>\n")
-	f.write("\t\t\t\t<firstName>" + row[3] + "</firstName>\n")
-	if len(row[4]) > 0 :
-		f.write("\t\t\t\t<middleName>" + row[4] + "</middleName>\n")
-	f.write("\t\t\t\t<lastName>" + row[5] + "</lastName>\n")
+	f.write("\t\t\t\t<firstName>" + row[COL_FNAME] + "</firstName>\n")
+	if len(row[COL_MI]) > 0 :
+		f.write("\t\t\t\t<middleName>" + row[COL_MI] + "</middleName>\n")
+	f.write("\t\t\t\t<lastName>" + row[COL_LNAME] + "</lastName>\n")
 	f.write("\t\t\t\t<alias>" + cId + "</alias>\n")
 	f.write("\t\t\t\t<socSecNoDashed>" + ssnDashed + "</socSecNoDashed>\n")
 	f.write("\t\t\t\t<ssnDataQualityValue>" + ssnDQ + "</ssnDataQualityValue>\n")
+	if hasVetStatus == 1 :
+		f.write("\t\t\t\t<veteranStatus>" + veteranStatus + "</veteranStatus>\n")
+
 	
 	#Assessment Data
 	f.write("\t\t\t\t<assessmentData>\n")
@@ -128,8 +130,10 @@ for row in reader:
 		writeassessment(f, 5, "svpprofgender", gender, now_out, now_out)
 	if (hasRace == 1) :
 		writeassessment(f, 5, "svpprofrace", race, now_out, now_out)
-	if (hasVetStatus == 1) :
-		writeassessment(f, 5, "veteran", veteranStatus, now_out, now_out)
+	# if (hasVetStatus == 1) :
+		# writeassessment(f, 5, "veteran", veteranStatus, now_out, now_out)
+	if (hasEthnicity == 1) :
+		writeassessment(f, 5, "svpprofeth", ethnicity, now_out, now_out)
 	
 
 		
