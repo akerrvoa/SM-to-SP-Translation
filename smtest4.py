@@ -4,6 +4,7 @@ import re
 from fmapv2 import *
 from format import *
 from elementout import *
+from vfnmap import *
 from datetime import datetime
 
 ###############################################
@@ -140,7 +141,7 @@ for row in reader:
 		writeassessment(f, 5, "svpprofdob", dob, now_out, now_out)
 		writeassessment(f, 5, "svpprofdobtype", dobDQ, now_out, now_out)
 		
-	### here here here add gender (6) , race (2), etc....	
+	### here here here Do we want to set assessment data to time of entry?  For now use import time	
 	if ( hasGender == 1) :
 		writeassessment(f, 5, "svpprofgender", gender, now_out, now_out)
 	if (hasRace == 1) :
@@ -166,7 +167,6 @@ f.write('\t\t</clientRecords>\n')
 f.write('\t\t<entryExitRecords>\n')
 i = 0 
 
-#Here here here   Do I need to reset the reader?   ???????????????????????????
 infile.seek(0)
 for row in reader:
 	i = i+1   #get row number for log
