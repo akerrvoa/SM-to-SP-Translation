@@ -113,13 +113,73 @@ for row in reader:
 			ethnicity = "Hispanic/Latino (HUD)"
 			hasEthnicity = 1
 		
-		
 	#Veteran Status
 	hasVetStatus = 0
 	if (len(row[COL_VETSTAT]) > 0) :
 		veteranStatus = formatveteran(row[COL_VETSTAT])
 		hasVetStatus = 1
+		
+	#Primary Language
+	hasPrimLang = 0
+	if (len(row[COL_LANG1]) > 0) :
+		lang1 = formatlang(row[COL_LANG1])
+		hasPrimLang = 1
+		
+	#Secondary Language
+	hasSecLang = 0
+	if (len(row[COL_LANG2]) > 0) :
+		lang2 = formatlang(row[COL_LANG2])
+		hasSecLang = 1
 
+	#Zip
+	hasZip = 0
+	if (len(row[COL_ZIP]) > 0) :
+		zip = formatzip(row[COL_ZIP])
+		hasZip = 1
+		
+	#Employed
+	hasEmplStat = 0
+	if (len(row[COL_EMPLSTAT]) > 0) :
+		emplstat = formatemplstat(row[COL_EMPLSTAT])
+		hasEmplStat = 1
+	
+	#Homeless
+	hasHomeStat = 0
+	if (len(row[COL_HOMESTAT]) > 0) :
+		homestat = formathomestat(row[COL_HOMESTAT])
+		hasHomeStat = 1
+	
+	#Status
+	hasStat = 0
+	if (len(row[COL_STAT]) > 0) :
+		stat = formatstat(row[COL_STAT])
+		hasStat = 1
+	
+	#PrimaryDrug
+	hasPrimDrug = 0
+	if (len(row[COL_DRUG1]) > 0) :
+		drug1 = formatdrug(row[COL_DRUG1])
+		hasPrimDrug = 1
+	
+	#SecondaryDrug
+	hasSecDrug = 0
+	if (len(row[COL_DRUG2]) > 0) :
+		drug2 = formatdrug(row[COL_DRUG2])
+		hasSecDrug = 1
+
+	#DisabilityType
+	hasDisType = 0
+	if (len(row[COL_DISTYPE]) > 0) :
+		distype = formatdistype(row[COL_DISTYPE])
+		hasDisType = 1
+
+	#unemployable
+	hasUnemp = 0
+	if (len(row[COL_UNEMP]) > 0) :
+		unemp = formatunemp(row[COL_UNEMP])
+		hasUnemp = 1
+
+		
 	########  Write the XML Child Elements   ########
 	f.write("\t\t\t<Client system_id='" + cId + "' record_id='" + cId + "' date_added='" + now_out + "' date_updated='" + now_out + "'>\n")
 	f.write("\t\t\t\t<firstName>" + row[COL_FNAME] + "</firstName>\n")
@@ -138,19 +198,29 @@ for row in reader:
 	
 	#DOB - omit if missing or invalid
 	if ( hasDOB == 1):
-		writeassessment(f, 5, "svpprofdob", dob, now_out, now_out)
-		writeassessment(f, 5, "svpprofdobtype", dobDQ, now_out, now_out)
+		writeassessment(f, 5, dobVFN, dob, now_out, now_out)
+		writeassessment(f, 5, dobTypeVFN, dobDQ, now_out, now_out)
 		
 	### here here here Do we want to set assessment data to time of entry?  For now use import time	
 	if ( hasGender == 1) :
-		writeassessment(f, 5, "svpprofgender", gender, now_out, now_out)
+		writeassessment(f, 5, genderVFN, gender, now_out, now_out)
 	if (hasRace == 1) :
-		writeassessment(f, 5, "svpprofrace", race, now_out, now_out)
-	# if (hasVetStatus == 1) :
-		# writeassessment(f, 5, "veteran", veteranStatus, now_out, now_out)
+		writeassessment(f, 5, raceVFN, race, now_out, now_out)
 	if (hasEthnicity == 1) :
-		writeassessment(f, 5, "svpprofeth", ethnicity, now_out, now_out)
-	
+		writeassessment(f, 5, ethnicityVFN, ethnicity, now_out, now_out)
+	if (hasPrimLang == 1) :
+		writeassessment(f, 5, primaryLanguageVFN, lang1, now_out, now_out)
+	if (hasSecLang == 1) :
+		writeassessment(f, 5, secondaryLanguageVFN, lang2, now_out, now_out)
+	if (hasZip == 1) :
+		writeassessment(f, 5, zipLastPermVFN, zip, now_out, now_out)
+	if (hasEmplStat == 1) :
+		writeassessment(f, 5, employmentStatusVFN, emplstat, now_out, now_out)
+	if (hasHomeStat == 1) :
+		writeassessment(f, 5, homelessVFN, homestat, now_out, now_out)
+	if (hasStat == 1) :
+		writeassessment(f, 5, reentrystatusVFN, stat, now_out, now_out)
+
 
 		
 	f.write("\t\t\t\t</assessmentData>\n")

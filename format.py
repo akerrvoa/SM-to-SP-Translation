@@ -47,3 +47,37 @@ def formatveteran(vet_in):
 	else :
 		vet_out = "Data not collected (HUD)"
 	return vet_out
+	
+	
+def formatlang(lang_in):
+	lang_out = lang_in
+	return lang_out
+	
+def formatzip(zip_in) :
+	zip_out = zip_in
+	return zip_out
+	
+def formatemplstat(estat_in) :
+	estat_out = estat_in
+	return estat_out
+	
+def formathomestat(hstat_in) :
+	hstat_out = hstat_in
+	return hstat_out
+	
+def formatstat(stat_in) :
+	stat_out = stat_in
+	return stat_out
+	
+def formatdrug(drug_in) :
+	drug_out = drug_in
+	return drug_out
+	
+def formatdistype(dt_in) :
+	dt_out = dt_in
+	return dt_out
+	
+def formatunemp(unemp_in) :
+	unemp_out = unemp_in	
+	return unemp_out
+
